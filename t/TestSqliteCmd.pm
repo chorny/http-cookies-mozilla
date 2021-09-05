@@ -5,6 +5,10 @@ use warnings;
 sub which_sqlite {
    eval { require 5.008_000; 1 }
      or return (undef, 'perl 5.8 needed for external command execution');
+   if ($^O eq 'MSWin32') {
+      eval { require 5.022_000; 1 }
+        or return (undef, 'perl 5.022 needed for external command execution on Windows');
+   }
    my $prg = $ENV{SQLITE_PATH} || 'sqlite3';
    open my $fh, '-|', $prg, '-version'
      or return (undef, "no pipe to $prg");
